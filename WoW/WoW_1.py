@@ -14,7 +14,7 @@ autoit.win_activate("World of Warcraft")
 # Change Directory to the Folder this script is in
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-# Prevents an error that occurs when you close the bot before removing the last Bobber
+# Prevents an error if you close the bot before removing the last Bobber
 try:
     os.remove("BobberLast.png")
 except Exception as e:
@@ -39,17 +39,17 @@ while True:
         if (time.time() - LastBait > 600):
             print("Bait Expired")
             autoit.control_send("World of Warcraft", "", "{3}", mode=0) # Press Bait
-            time.sleep(random.random())
+            time.sleep(random.random()) # Sleeps for a random duration (Between 0 and 1)
             autoit.control_send("World of Warcraft", "", "{2}", mode=0) # Press Fishing Pole
             LastBait = time.time()
-            time.sleep(2)
+            time.sleep(2) # Wait for bait to finish
 
         # If it's been 20 seconds, cast a new line
         if (time.time() - LastCast > 20):
             print("Time exceeded fishing timer")
             autoit.control_send("World of Warcraft", "", "{1}", mode=0) # Cast Line
             LastCast = time.time()
-            time.sleep(2)
+            time.sleep(2) # Wait for previous bobber to disappear
 
         # Monitor the bobber for a splash
         BobberX, BobberY, BobberWidth, BobberHeight = pyautogui.locateOnScreen("Bobber.png", confidence=0.65)
@@ -64,7 +64,7 @@ while True:
                     print("Time exceeded fishing timer")
                     LastCast = time.time()
                     autoit.control_send("World of Warcraft", "", "{1}", mode=0) # Cast Line
-                    time.sleep(2)
+                    time.sleep(2) # Wait for previous bobber to disappear
                     break # Escape the While Loop that is watching the bobber
 
                 # Screenshot of a small area around the bobber
@@ -78,15 +78,16 @@ while True:
                     im2 = ImageChops.Image.open("BobberLast.png")
                     image_diff = rmsdiff(im1,im2)
                     # print(image_diff) # Uncomment to view splash values
-                    if image_diff > 25:  # Threshold for splash detection (Found via the line above)
+                    # Threshold for splash detection (Found via the line above)
+                    if image_diff > 25:
                         print("Splash detected")
                         time.sleep(.1)
                         autoit.control_send("World of Warcraft", "", "{F}", mode=0) # Interact Key (Catch Fish)
                         time.sleep(1)
                         autoit.control_send("World of Warcraft", "", "{1}", mode=0) # Cast Line
                         LastCast = time.time()
-                        time.sleep(2)
-                        break
+                        time.sleep(2) # Wait for previous bobber to disappear
+                        break # Escape the While Loop that is watching the bobber
                     
                 image.save("BobberLast.png")
 
