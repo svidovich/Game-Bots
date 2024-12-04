@@ -59,7 +59,7 @@ while True:
             Minimap = Image.open("Minimap.png").rotate(angle_degrees,3)
             Minimap.save("Minimap_Rotated.png")
             
-            WorldMap = cv2.imread("WorldMap.jpg")
+            WorldMap = cv2.imread("WorldMap.png")
             Minimap = cv2.imread("Minimap_Rotated.png")
             res = cv2.matchTemplate(WorldMap, Minimap, cv2.TM_CCOEFF_NORMED)
             loc = np.where(res >= .3)
