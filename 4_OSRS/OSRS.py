@@ -1,11 +1,12 @@
 import pyautogui
 import autoit
 import os
-import math
+import numpy as nm 
+import pytesseract
 import statistics
-import cv2
-import numpy as np
-from PIL import Image 
+import math
+import cv2 
+from PIL import ImageGrab 
 
 # Bring WoW Client to the Foreground
 # autoit.win_activate("RuneLite")
@@ -13,7 +14,23 @@ from PIL import Image
 # Change Directory to the Folder this script is in
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-def calculate_angle(center, point):
+def FindLocationFromPlugin():
+    X1, Y1, X2, Y2 = autoit.win_get_pos("RuneLite")
+    LocationText = pyautogui.screenshot(region=(X1+18, Y1+52, 126, 20))
+    pytesseract.pytesseract.tesseract_cmd = r".\Tesseract-OCR\tesseract.exe"
+
+    # Only Find Numbers
+    custom_config = r'--oem 3 --psm 6 -c tessedit_char_whitelist=0123456789,'
+
+    # Pull Location Text
+    string = pytesseract.image_to_string(LocationText,config=custom_config)
+
+    # Split by line, then split by commas
+    X, Y, Height = string.split("\n")[0].split(",")
+
+    return X, Y, Height
+
+def CalculateAngle(center, point):
     # unpack the coordinates
     cx, cy = center  # center point
     px, py = point   # point on the circle
@@ -38,9 +55,7 @@ while True:
             CompassX, CompassY, = int(CompassX), int(CompassY)
             CompassWidth, CompassHeight = int(CompassWidth), int(CompassHeight)
             Compass = pyautogui.screenshot(region=(CompassX, CompassY, CompassWidth, CompassHeight))
-            Compass.save("CompassCurrent.png")
-            XArray= []
-            YArray=[]
+            XArray, YArray= [], []
             for x in range(CompassWidth):
                 for y in range(CompassHeight):
                     current_color = Compass.getpixel((x, y))
@@ -48,28 +63,16 @@ while True:
                         XArray.append(x)
                         YArray.append(y)
 
-            x = statistics.mean(XArray)
-            y = statistics.mean(YArray)
-            angle_degrees = calculate_angle(((CompassWidth/2), (CompassHeight/2)), (x, y))
-            print("Angle of Map: " + str(round(angle_degrees,1)))
-
-            Minimap = pyautogui.screenshot(region=(int(CompassX + (CompassWidth/2) + 25), CompassY + 29, 110, 110))
-            Minimap.save("Minimap.png")
-
-            Minimap = Image.open("Minimap.png").rotate(angle_degrees,3)
-            Minimap.save("Minimap_Rotated.png")
+            if len(XArray) > 1:
+                x = statistics.mean(XArray)
+                y = statistics.mean(YArray)
             
-            WorldMap = cv2.imread("WorldMap.png")
-            Minimap = cv2.imread("Minimap_Rotated.png")
-            res = cv2.matchTemplate(WorldMap, Minimap, cv2.TM_CCOEFF_NORMED)
-            loc = np.where(res >= .3)
-
-            Length = 0
-            for pt in zip(*loc[::-1]):
-                if (Length == 0):
-
-                    print(pt[0] + ", " + pt[1])
-                    Length = 1
+            angle_degrees = CalculateAngle(((CompassWidth/2), (CompassHeight/2)), (x, y))
+            print("Angle of Map: " + str(round(angle_degrees,1)))
+            
+            # Find Location on the World Map
+            X, Y, Height = FindLocationFromPlugin()
+            print(X + ", " + Y + ", " + Height)
                 
     except Exception as e:
         print(e)
