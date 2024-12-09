@@ -65,7 +65,7 @@ def findLocation(drawLoc = False):
 #  Compass Info
 #  CompassX, CompassY, CompassWidth, CompassAngle
 def readCompass():
-    CompassX, CompassY, CompassWidth, CompassHeight = pyautogui.locateOnScreen("Compass.png", confidence=0.65)
+    CompassX, CompassY, CompassWidth, CompassHeight = pyautogui.locateOnScreen(".\\Image Files\\" + "Compass.png", confidence=0.65)
     if CompassX:
         CompassX, CompassY = int(CompassX), int(CompassY)
         CompassWidth, CompassHeight = int(CompassWidth), int(CompassHeight)
@@ -129,6 +129,7 @@ def setWorldMapPath(location):
 # Locate Image on Screen
 # Randomize X, Y
 def locateOnScreenRandom(fileName, confidence=0.8, Region=None):
+    fileName = ".\\Image Files\\" + fileName
     if Region:
         x, y, w, h = pyautogui.locateOnScreen(fileName, confidence=0.35, region=Region)
     else:
@@ -169,7 +170,6 @@ def rotateCamera(angle, limit=True):
 def correctPath(CompassX, CompassY, CompassWidth, angleOfApproach, Distance):
     MinimapX, MinimapY = int(CompassX + (CompassWidth / 2) + 1), int(CompassY + 7)
     Minimap = pyautogui.screenshot(region=(MinimapX, MinimapY, 154, 154))
-    Minimap.save("Minimap.png")
     CenterX, CenterY = MinimapX + 77, MinimapY + 77
     if Distance > 20:
         mapDistance = random.randint(60, 70)
@@ -193,7 +193,6 @@ def correctPath(CompassX, CompassY, CompassWidth, angleOfApproach, Distance):
 def findPath(CompassX, CompassY, CompassWidth):
     MinimapX, MinimapY = int(CompassX + (CompassWidth / 2) + 1), int(CompassY + 7)
     Minimap = pyautogui.screenshot(region=(MinimapX, MinimapY, 154, 154))
-    Minimap.save("Minimap.png")
     width = Minimap.width
     height = Minimap.height
 
@@ -442,7 +441,7 @@ def BankWood(treeType, X2, Y2):
                 time.sleep(random.uniform(4,5))
 
                 if treeType == "Regular":
-                    points = list(pyautogui.locateAllOnScreen("Logs.png", confidence=0.35, region=(1663,379,257,300)))
+                    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + "Logs.png", confidence=0.35, region=(1663,379,257,300)))
                 point = random.choice(points)
                 x, y, w, h = point[0], point[1], point[2], point[3]
                 RandomX = random.randrange(x, x + w)
