@@ -1,0 +1,41 @@
+# ======Plugin Changes==========
+# Agility (Disable)
+# Camera
+# Expand out zoom limit (-250)
+# Disable Camera Shake ☒
+# Right Click Moves Camera ☒
+
+# GroundItems
+# Show highlighted items only ☒
+# Highlighted Items Color (#FFE7FF00)
+
+# Logout Timer
+# Idle Timer (25 mins)
+
+# Roof Removal
+
+# RuneLite
+# Game Size (775x646)
+# Resize Type (Keep Window Size)
+# Lock Window Size ☒
+# Contain in screen (Always)
+# Interface font (Bold)
+# Overlay color (#FF463D32)
+
+# Woodcutting
+# Reset Stats (9999 mins)
+# World Map (Disable)
+# ======(3rd-party)==========
+
+# Display Name Disguiser
+# No change
+# Shortest Path
+# Recalculate Distance (0)
+# Draw path on tiles ☐
+# Path Color (#FFC984FF)
+# Calculating Color (#FFC984FF)
+
+# World Location
+# Tile Location ☐
+# Grid Info ☒
+# ==============================
