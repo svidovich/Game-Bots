@@ -29,11 +29,17 @@
 
 # Display Name Disguiser
 # No change
+
 # Shortest Path
 # Recalculate Distance (0)
 # Draw path on tiles ☐
 # Path Color (#FFC984FF)
 # Calculating Color (#FFC984FF)
+
+# Random Event Hider
+# Other's random events - Hide All ☒
+# Own random events - Hide All ☒
+# Misc - Hide ALL Strange Plants ☒
 
 # World Location
 # Tile Location ☐

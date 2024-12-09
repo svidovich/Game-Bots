@@ -47,7 +47,7 @@ def smooth_move(x2, y2):
         middle_ratio = abs(0.5 - (i / num_points))
         sleep_duration = duration * (0.5 + 0.5 * middle_ratio) / len(points)
         time.sleep(sleep_duration)
-    time.sleep(random.uniform(.25, .5))
+    time.sleep(random.uniform(.15, .35))
 
 # X, Y, Height of Player
 def findLocation(drawLoc = False):
@@ -106,7 +106,7 @@ def setWorldMapPath(location):
     if location == "Lumbridge":
         X1, Y1 = 1583, 417
     elif location == "Regular":
-        X1, Y1 = 1579, 400
+        X1, Y1 = 1575, 404
     elif location == "GrandExchange":
         X1, Y1 = 1579, 400
     elif location == "SouthBank":
@@ -133,7 +133,8 @@ def locateOnScreenRandom(fileName, confidence=0.8, Region=None):
     if Region:
         x, y, w, h = pyautogui.locateOnScreen(fileName, confidence=0.35, region=Region)
     else:
-        x, y, w, h = pyautogui.locateOnScreen(fileName, confidence=confidence)
+        x1,y1,x2,y2 = autoit.win_get_pos("RuneLite")
+        x, y, w, h = pyautogui.locateOnScreen(fileName, confidence=confidence, region=(x1,y1,x2-x1,y2-y1))
     RandomX = random.randrange(x, x + w)
     RandomY = random.randrange(y, y + h)
     return RandomX, RandomY
@@ -171,12 +172,12 @@ def correctPath(CompassX, CompassY, CompassWidth, angleOfApproach, Distance):
     MinimapX, MinimapY = int(CompassX + (CompassWidth / 2) + 1), int(CompassY + 7)
     Minimap = pyautogui.screenshot(region=(MinimapX, MinimapY, 154, 154))
     CenterX, CenterY = MinimapX + 77, MinimapY + 77
-    if Distance > 20:
-        mapDistance = random.randint(60, 70)
+    if Distance > 15:
+        mapDistance = random.randint(66, 70)
     elif Distance > 10:
-        mapDistance = random.randint(30, 35)
+        mapDistance = random.randint(35, 40)
     elif Distance > 0:
-        mapDistance = random.randint(15, 18)
+        mapDistance = random.randint(20, 25)
     dx = mapDistance * math.cos(math.radians(angleOfApproach - 90))
     dy = mapDistance * math.sin(math.radians(angleOfApproach - 90))
     smooth_move(CenterX + dx, CenterY + dy)
@@ -184,9 +185,9 @@ def correctPath(CompassX, CompassY, CompassWidth, angleOfApproach, Distance):
     startTime = time.time()
     rotateCamera(angleOfApproach)
     if (autoit.pixel_get_color(1734, 157) == 12819969):
-        time.sleep(2.5 - (time.time() - startTime))
+        time.sleep(2 - (time.time() - startTime))
     else:
-        time.sleep(6.5 - (time.time() - startTime))
+        time.sleep(6 - (time.time() - startTime))
 
 # Long Runs w/ the path set by setWorldMapPath()
 # Find Pink Path
@@ -232,9 +233,9 @@ def pathLoop():
             time.sleep(random.uniform(.4, .6))
             rotateCamera(PathAngle)
             if (autoit.pixel_get_color(1734, 157) == 12819969):
-                time.sleep(2.5 - (time.time() - startTime))
+                time.sleep(2 - (time.time() - startTime))
             else:
-                time.sleep(6.5 - (time.time() - startTime))
+                time.sleep(6 - (time.time() - startTime))
         except:
             print("Path Complete")
             break
@@ -346,26 +347,26 @@ def CutWood(treeType, X2, Y2):
                     autoit.mouse_click()
                 else:
                     rotateCamera(angleOfApproach, limit=False)
-        
+                    break
+
         startTime = time.time()
         while True:
+            # Walking to Wood
             try:
                 if locateOnScreenRandom("WoodcuttingBooleanFalse.png", confidence=0.75):
                     if ((time.time() - startTime) > 5):
                         break
-                    #print("Walking to Wood")
                     time.sleep(.01)
             except Exception as e:
                 break
         
         while True:
+            # Cutting Wood
             try:
                 if locateOnScreenRandom("WoodcuttingBooleanTrue.png", confidence=0.75):
-                    #print("Cutting Wood")
                     time.sleep(.01)
             except Exception as e:
                 break
-
         break
 
 # Bank
@@ -376,7 +377,8 @@ def BankWood(treeType, X2, Y2):
             try:
                 print("Find Teller")
                 if treeType == "Regular":
-                    tellerLocs = highlight_color_on_screen(2564148, 5, region=(957, 110, 1834, 635), drawLoc=False)
+                    x1,y1,x2,y2 = autoit.win_get_pos("RuneLite")
+                    tellerLocs = highlight_color_on_screen(2564148, 5, region=(x1, y1, x2, y2),sections = 10, drawLoc=False)
                 
                 sortedTellers = sorted(tellerLocs, key=lambda loc: loc[0])
                 leftTeller = sortedTellers[0] # Leftmost tree
