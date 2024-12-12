@@ -10,7 +10,8 @@ import mouse
 import numpy as np
 from PIL import Image, ImageGrab, ImageDraw
 
-# Human Movement of Mouse
+# Smoothly moves the mouse from the current position to a target position (x2, y2).
+# Incorporates random movement patterns to simulate human-like behavior.
 def smooth_move(x2, y2):
     try:
         x1, y1 = mouse.get_position()
@@ -55,7 +56,8 @@ def smooth_move(x2, y2):
     except:
         print("smooth_move() Error")
 
-# X, Y, Height of Player
+# Finds the location (X, Y, Height) of the player's character on the screen.
+# Optionally draws the location.
 def findLocation(drawLoc = False):
     try:
         X1, Y1, X2, Y2 = autoit.win_get_pos("RuneLite")
@@ -74,8 +76,8 @@ def findLocation(drawLoc = False):
     except Exception as e:
         print("findLocation() error")
 
-#  Compass Info
-#  CompassX, CompassY, CompassWidth, CompassAngle
+# Reads the player's compass data from the screen.
+# Returns CompassX, CompassY, CompassWidth, CompassAngle.
 def readCompass():
     try:
         X1, Y1, X2, Y2 = autoit.win_get_pos("RuneLite")
@@ -83,7 +85,6 @@ def readCompass():
         if CompassX:
             CompassX, CompassY = int(CompassX), int(CompassY)
             CompassWidth, CompassHeight = int(CompassWidth), int(CompassHeight)
-            print("CompassX: " + str(CompassX) + " " + "CompassY: " + str(CompassY))
             Compass = pyautogui.screenshot(region=(CompassX, CompassY, CompassWidth, CompassHeight))
             XArray, YArray = [], []
             for x in range(CompassWidth):
@@ -100,7 +101,8 @@ def readCompass():
     except:
         print("readCompass() Error")
 
-# Angle between Center and Point
+# Calculates the angle between the center point and a target point.
+# Returns the angle in degrees.
 def calculateAngle(center, point):
     try:
         cx, cy = center
@@ -114,7 +116,8 @@ def calculateAngle(center, point):
     except Exception as e:
         print("calculateAngle() error")
 
-# Set WorldMap Path
+# Sets the world map path to a specific location.
+# Clicks through the GUI to set the player's location on the world map.
 def setWorldMapPath(location):
     try:
         RandomX, RandomY = locateOnScreenRandom("Globe.png")
@@ -152,8 +155,8 @@ def setWorldMapPath(location):
     except:
         print("setWorldMapPath() Error")
 
-# Locate Image on Screen
-# Randomize X, Y
+# Locate an image on the screen randomly.
+# Returns randomized X, Y coordinates within the found area.
 def locateOnScreenRandom(fileName, confidence=0.8, Region=None):
     try:
         fileName = ".\\Image Files\\" + fileName
@@ -168,8 +171,8 @@ def locateOnScreenRandom(fileName, confidence=0.8, Region=None):
     except:
         return False, False
 
-# Rotate Camera by Angle
-# Don't rotate near 0 deg if limit is set
+# Rotate the in-game camera by a certain angle.
+# Optionally limits rotation to avoid sharp turns.
 def rotateCamera(angle, limit=True):
     try:
         origX, origY = autoit.mouse_get_pos()
@@ -198,8 +201,8 @@ def rotateCamera(angle, limit=True):
     except:
         print("rotateCamera() Error")
 
-# Short Runs w/ Minimap
-# Click towards Target
+# Clicks towards a target using the minimap.
+# Adjusts direction based on the target type (tree).
 def correctPath(treeType, Info):
     try:
         Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
@@ -224,16 +227,20 @@ def correctPath(treeType, Info):
                 time.sleep(3 - (time.time() - startTime))
             elif (treeType == "Willow"):
                 time.sleep(8 - (time.time() - startTime))
+            else:
+                time.sleep(3 - (time.time() - startTime))
         else:
             if (treeType == "Regular"):
                 time.sleep(7 - (time.time() - startTime))
             elif (treeType == "Willow"):
                 time.sleep(11 - (time.time() - startTime))
+            else:
+                time.sleep(7 - (time.time() - startTime))
     except: 
         print("correctPath() Error")
 
-# Long Runs w/ the path set by setWorldMapPath()
-# Find Pink Path
+# Finds the pathway towards a location using the minimap.
+# Evaluates the color on the minimap for pathfinding.
 def findPath(Info):
     try:
         Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
@@ -276,18 +283,16 @@ def findPath(Info):
     except Exception as e:
         print(f"findPath() Error: {e}")
 
-# Long Runs w/ the path set by setWorldMapPath()
-# Click Pink Path found via findPath()
+# Loop to continuously walk the path found by findPath().
+# Simulates continuous movement towards the path until the task is completed.
 def pathLoop(treeType, TreeX, TreeY):
     try:
         while True:
             Info = allInfo(TreeX, TreeY)
             Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
 
-            print("Angle of Player: " + str(round(CompassAngle, 1)))
             try:
                 PathPoint, PathAngle = findPath(Info)
-                print("Angle of Path: " + str(round(PathAngle, 1)))
                 smooth_move(PathPoint[0], PathPoint[1])
                 autoit.mouse_click()
                 startTime = time.time()
@@ -298,10 +303,14 @@ def pathLoop(treeType, TreeX, TreeY):
                         time.sleep(3 - (time.time() - startTime))
                     elif (treeType == "Willow"):
                         time.sleep(3 - (time.time() - startTime))
+                    else:
+                        time.sleep(3 - (time.time() - startTime))
                 else:
                     if (treeType == "Regular"):
                         time.sleep(7 - (time.time() - startTime))
                     elif (treeType == "Willow"):
+                        time.sleep(7 - (time.time() - startTime))
+                    else:
                         time.sleep(7 - (time.time() - startTime))
             except:
                 print("Path Complete")
@@ -381,10 +390,11 @@ def allInfo(X2, Y2):
         print("Location: " + str(X) + ", " + str(Y))
 
         Distance = math.sqrt((X2 - X) ** 2 + (Y2 - Y) ** 2)
-        Info.append(Distance)
         print("Distance: " + str(Distance))
+        Info.append(Distance)
 
         CompassX, CompassY, CompassWidth, CompassAngle = readCompass()
+        print("CompassX: " + str(CompassX) + " " + "CompassY: " + str(CompassY))
         print("Angle of Player: " + str(round(CompassAngle, 1)))
         Info.append(CompassX)
         Info.append(CompassY)
@@ -404,7 +414,6 @@ def allInfo(X2, Y2):
 
 # Unpack all location information
 def unpackInfo(Info):
-    print(Info[0])
     Distance = Info[0]
     CompassX = Info[1]
     CompassY = Info[2]
@@ -413,7 +422,8 @@ def unpackInfo(Info):
     angleOfApproach = Info[5]
     return Distance, CompassX, CompassY, CompassWidth, CompassAngle,  angleOfApproach
 
-# Cut
+# Handles the woodcutting task for the player.
+# Finds trees, moves to them, and cuts the trees
 def cutWood(treeType, Info):
     try:
         while True:
@@ -480,7 +490,7 @@ def cutWood(treeType, Info):
     except:
         print("cutWood() Error")
 
-# Bank
+# Banks the cut wood by interacting with the banker
 def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
     try:
         while True:
@@ -585,17 +595,24 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
 # Bank, Cut, or Run?
 def woodCutter(treeType):
     if treeType == "Regular":
+        cutting = True
         TreeX, TreeY = 3164, 3403
         BankX, BankY = 3182, 3440
         colorLogs = 7229226
         colorTeller = 2564148
         distanceLimit = 5
     if treeType == "Willow":
+        cutting = True
         TreeX, TreeY = 3087, 3232
         BankX, BankY = 3094, 3243
         colorLogs = 4405779
         colorTeller = 5261636
         distanceLimit = 3
+    if treeType == "GrandExchange":
+        cutting = False
+        TreeX, TreeY = 3164, 3486
+        distanceLimit = 5
+        colorLogs = 0000000
 
     while True:
         try:
@@ -614,8 +631,11 @@ def woodCutter(treeType):
                     setWorldMapPath(treeType)
                     pathLoop(treeType, TreeX, TreeY)
                 else:
-                    print("Cut Wood")
-                    cutWood(treeType, Info)
+                    if cutting:
+                        print("Cut Wood")
+                        cutWood(treeType, Info)
+                    else:
+                        break
             time.sleep(1)
         except Exception as e:
             pass
@@ -626,3 +646,4 @@ os.chdir(os.path.dirname(os.path.abspath(__file__))) # Change Directory to the F
 
 # woodCutter("Regular")
 woodCutter("Willow")
+# woodCutter("GrandExchange")
