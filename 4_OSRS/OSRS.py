@@ -237,34 +237,44 @@ def correctPath(treeType, Info):
 def findPath(Info):
     try:
         Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
-
         MinimapX, MinimapY = int(CompassX + (CompassWidth / 2) + 1), int(CompassY + 7)
         Minimap = pyautogui.screenshot(region=(MinimapX, MinimapY, 154, 154))
         width = Minimap.width
         height = Minimap.height
-
         compass_array = np.array(Minimap)
         target_color = (201, 132, 255)
         XArray = []
         YArray = []
+        
+        # Define a safe zone distance from the edge to avoid clicks too close to the edge
+        buffer_zone = 23  # Adjust this distance as needed
+
         for x in range(width):
             for y in range(height):
                 current_color = tuple(compass_array[y, x])
                 if current_color == target_color:
-                    XArray.append(x)
-                    YArray.append(y)
-        max_distance = 200000
+                    # Only accept colors that are not within the buffer zone from the edges
+                    if x >= buffer_zone and x <= width - buffer_zone - 1 and \
+                       y >= buffer_zone and y <= height - buffer_zone - 1:
+                        XArray.append(x)
+                        YArray.append(y)
+
+        max_distance = 2000000
         min_distance = 10
         closest_pixel = None
+        
         for x, y in zip(XArray, YArray):
             distance_to_edge = min(x, y, width - x - 1, height - y - 1)
             if distance_to_edge < max_distance and distance_to_edge > min_distance:
                 max_distance = distance_to_edge
                 PathPoint = (x + MinimapX, y + MinimapY)
-        PathAngle = calculateAngle((MinimapX + 81, MinimapY + 81), PathPoint)
+                
+        # Calculate the angle to the target path point
+        PathAngle = calculateAngle((MinimapX + 77, MinimapY + 77), PathPoint)  # Center coordinates
         return PathPoint, PathAngle
-    except:
-        print("findPath() Error")
+        
+    except Exception as e:
+        print(f"findPath() Error: {e}")
 
 # Long Runs w/ the path set by setWorldMapPath()
 # Click Pink Path found via findPath()
