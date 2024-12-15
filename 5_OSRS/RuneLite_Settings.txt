@@ -15,10 +15,13 @@
 # Depriortize menu hidden items ☒
 # Price Display (Off)
 
-
-
 # Logout Timer
 # Idle Timer (25 mins)
+
+# Menu Entry Swapper
+# Shift-Right Click Dark Wizard -> Swap "Attack" and "Walk Here"
+# Shift-Right Click Logs -> Swap "Use" and "Drop"
+# Shift-Right Click Willow Logs -> Swap "Use" and "Drop"
 
 # Roof Removal
 

@@ -181,23 +181,22 @@ def findLocation(drawLoc = False):
 def readCompass():
     try:
         X1, Y1, X2, Y2 = autoit.win_get_pos("RuneLite")
-        CompassX, CompassY, CompassWidth, CompassHeight = pyautogui.locateOnScreen(".\\Image Files\\" + "Compass.png", confidence=0.6, region=(X1, Y1, X2-X1, Y2-Y1))
-        if CompassX:
-            CompassX, CompassY = int(CompassX), int(CompassY)
-            CompassWidth, CompassHeight = int(CompassWidth), int(CompassHeight)
-            Compass = pyautogui.screenshot(region=(CompassX, CompassY, CompassWidth, CompassHeight))
-            XArray, YArray = [], []
-            for x in range(CompassWidth):
-                for y in range(CompassHeight):
-                    current_color = Compass.getpixel((x, y))
-                    if current_color == (49, 41, 29):
-                        XArray.append(x)
-                        YArray.append(y)
-            if len(XArray) > 1:
-                x = statistics.mean(XArray)
-                y = statistics.mean(YArray)
-            CompassAngle = calculateAngle(((CompassWidth / 2), (CompassHeight / 2)), (x, y))
-            return CompassX, CompassY, CompassWidth, CompassAngle
+        CompassX, CompassY, CompassWidth, CompassHeight = 1702, 28, 44, 44
+        CompassX, CompassY = int(CompassX), int(CompassY)
+        CompassWidth, CompassHeight = int(CompassWidth), int(CompassHeight)
+        Compass = pyautogui.screenshot(region=(CompassX, CompassY, CompassWidth, CompassHeight))
+        XArray, YArray = [], []
+        for x in range(CompassWidth):
+            for y in range(CompassHeight):
+                current_color = Compass.getpixel((x, y))
+                if current_color == (49, 41, 29):
+                    XArray.append(x)
+                    YArray.append(y)
+        if len(XArray) > 1:
+            x = statistics.mean(XArray)
+            y = statistics.mean(YArray)
+        CompassAngle = calculateAngle(((CompassWidth / 2), (CompassHeight / 2)), (x, y))
+        return CompassX, CompassY, CompassWidth, CompassAngle
     except:
         print("readCompass() Error")
 
@@ -555,10 +554,7 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
                         autoit.send("{Esc}", mode=0)
                         break
 
-                    if treeType == "Regular":
-                        points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + "Logs.png", confidence=0.4, region=(1663,379,257,300)))
-                    elif treeType == "Willow":
-                        points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + "WillowLogs.png", confidence=0.4, region=(1663,379,257,300)))
+                    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.4, region=(1663,379,257,300)))
                     point = random.choice(points)
                     x, y, w, h = point[0], point[1], point[2], point[3]
                     x, y = int(x), int(y)
@@ -601,11 +597,8 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
 
 # Drops the wood if bankBool is set to False (Powerleveling)
 def dropWood(treeType):
-    if treeType == "Regular":
-        points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + "Logs.png", confidence=0.4, region=(1663, 379, 257, 300)))
-    elif treeType == "Willow":
-        points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + "WillowLogs.png", confidence=0.4, region=(1663, 379, 257, 300)))
-    
+    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.4, region=(1663, 379, 257, 300)))
+
     filtered_points = []
 
     # Filtering points to avoid overlaps
