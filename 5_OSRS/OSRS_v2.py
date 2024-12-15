@@ -284,6 +284,8 @@ def setWorldMapPath(location):
             X1, Y1 = 1575, 404
         elif location == "Willow":
             X1, Y1 = 1574, 413
+        elif location == "Yew":
+            X1, Y1 = 1580, 401
         elif location == "GrandExchange":
             X1, Y1 = 1579, 400
         elif location == "SouthBank":
@@ -551,7 +553,7 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
                         autoit.send("{Esc}", mode=0)
                         break
 
-                    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.4, region=(1663,379,257,300)))
+                    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.6, region=(1663,379,257,300)))
                     point = random.choice(points)
                     x, y, w, h = point[0], point[1], point[2], point[3]
                     x, y = int(x), int(y)
@@ -594,7 +596,7 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
 
 # Drops the wood if bankBool is set to False (Powerleveling)
 def dropWood(treeType):
-    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.4, region=(1663, 379, 257, 300)))
+    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.6, region=(1663, 379, 257, 300)))
 
     filtered_points = []
 
@@ -689,7 +691,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__))) # Change Directory to the F
 # Cut Willows in Draynor and Drop the Logs
 # woodCutter("Willow", bankBool = False)
 
-woodCutter("Yew")
-
 # Walk to the GE ("cutting" is False so it will end the script at the GE)
 # woodCutter("GrandExchange")
+
+woodCutter("Yew")

@@ -675,7 +675,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__))) # Change Directory to the F
 # woodCutter("Willow")
 
 # Cut Willows in Draynor and Drop the Logs
-# woodCutter("Willow", bankBool = False)
+woodCutter("Willow", bankBool = False)
 
 # Walk to the GE ("cutting" is False so it will end the script at the GE)
 # woodCutter("GrandExchange")
