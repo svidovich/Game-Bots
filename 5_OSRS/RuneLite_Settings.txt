@@ -35,6 +35,9 @@
 # World Map (Disable)
 # ======(3rd-party)==========
 
+# Custom Left Click Drop (ONLY needed if leveling and not banking)
+# Item list to left click drop (Willow Logs, Logs) 
+
 # Display Name Disguiser
 # No change
 

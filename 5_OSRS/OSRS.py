@@ -18,22 +18,22 @@ from PIL import Image, ImageGrab, ImageDraw  # For image processing and drawing.
 def smoothMove(x2, y2):
     try:
         x1, y1 = mouse.get_position()
+        trig = random.randint(1, 4)
         if (abs(x2 - x1) > 750) or (abs(y2 - y1) > 750):
             amplitude = random.randint(75, 100)
             duration = random.uniform(0.75, 1)
         elif (abs(x2 - x1) > 350) or (abs(y2 - y1) > 500):
             amplitude = random.randint(50, 75)
             duration = random.uniform(0.5, .75)
-        elif (abs(x2 - x1) > 50) or (abs(y2 - y1) > 50):
+        elif (abs(x2 - x1) > 75) or (abs(y2 - y1) > 75):
             amplitude = random.randint(25, 50)
             duration = random.uniform(0.5, .75)
-        else:
+        else: # Very Short Movements Don't Arc Up/Down
             amplitude = 0
-            y_variation = 0
+            trig = 5
             duration = random.uniform(0.25, .5)
         points = []
         num_points = int(duration * 75)
-        trig = random.randint(1, 4)
         for i in range(num_points + 1):
             ratio = i / num_points
             x = int(x1 + (x2 - x1) * ratio)
@@ -45,7 +45,7 @@ def smoothMove(x2, y2):
                 y_variation = int(amplitude * math.sin(ratio * math.pi + math.pi) + .2 * math.sin(30 * ratio))
             elif trig == 4:
                 y_variation = int(amplitude * math.sin(ratio * math.pi + math.pi) + .2 * math.cos(30 * ratio + (math.pi / 2)))
-            elif trig == 5:
+            elif trig == 5: # Very Short Movements don't Arc Up/Down
                 y_variation = 0 
             y = int(y1 + (y2 - y1) * ratio + y_variation)
             points.append((x, y))
@@ -247,7 +247,6 @@ def unpackInfo(Info):
 # Optionally limits rotation to avoid sharp turns.
 def rotateCamera(angle, limit=True):
     try:
-        origX, origY = autoit.mouse_get_pos()
         x = random.randint(1278, 1531)
         y = random.randint(300, 400)
         if angle < 0:
@@ -315,7 +314,7 @@ def setWorldMapPath(location):
 # Adjusts direction based on the target type (tree).
 def correctPath(treeType, Info):
     try:
-        Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
+        Distance, CompassX, CompassY, CompassWidth, _, angleOfApproach = unpackInfo(Info)
 
         MinimapX, MinimapY = int(CompassX + (CompassWidth / 2) + 1), int(CompassY + 7)
         Minimap = pyautogui.screenshot(region=(MinimapX, MinimapY, 154, 154))
@@ -332,17 +331,13 @@ def correctPath(treeType, Info):
         autoit.mouse_click()
         startTime = time.time()
         rotateCamera(angleOfApproach)
-        if (autoit.pixel_get_color(1726,160) == 15522407):
-            if (treeType == "Regular"):
-                time.sleep(3 - (time.time() - startTime))
-            elif (treeType == "Willow"):
+        if (autoit.pixel_get_color(1726,160) == 15522407): # If Running
+            if (treeType == "Willow"):
                 time.sleep(9 - (time.time() - startTime))
             else:
                 time.sleep(3 - (time.time() - startTime))
         else:
-            if (treeType == "Regular"):
-                time.sleep(7 - (time.time() - startTime))
-            elif (treeType == "Willow"):
+            if (treeType == "Willow"):
                 time.sleep(11 - (time.time() - startTime))
             else:
                 time.sleep(7 - (time.time() - startTime))
@@ -353,13 +348,12 @@ def correctPath(treeType, Info):
 # Evaluates the color on the minimap for pathfinding.
 def findPath(Info):
     try:
-        Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
+        _ , CompassX, CompassY, CompassWidth, _, angleOfApproach = unpackInfo(Info)
         MinimapX, MinimapY = int(CompassX + (CompassWidth / 2) + 1), int(CompassY + 7)
         Minimap = pyautogui.screenshot(region=(MinimapX, MinimapY, 154, 154))
-        width = Minimap.width
-        height = Minimap.height
+        width, height = Minimap.width, Minimap.height
         compass_array = np.array(Minimap)
-        target_color = (201, 132, 255)
+        target_color = (201, 132, 255) # Pink Path
         XArray = []
         YArray = []
         
@@ -370,7 +364,7 @@ def findPath(Info):
             for y in range(height):
                 current_color = tuple(compass_array[y, x])
                 if current_color == target_color:
-                    # Only accept colors that are not within the buffer zone from the edges
+                    # Only accept colors that are inside the buffer zone
                     if x >= buffer_zone and x <= width - buffer_zone - 1 and \
                        y >= buffer_zone and y <= height - buffer_zone - 1:
                         XArray.append(x)
@@ -386,12 +380,12 @@ def findPath(Info):
                 max_distance = distance_to_edge
                 PathPoint = (x + MinimapX, y + MinimapY)
                 
-        # Calculate the angle to the target path point
-        PathAngle = calculateAngle((MinimapX + 77, MinimapY + 77), PathPoint)  # Center coordinates
+        # Calculate the angle to the target path point from the Center
+        PathAngle = calculateAngle((MinimapX + 77, MinimapY + 77), PathPoint)  
         return PathPoint, PathAngle
         
     except Exception as e:
-        print(f"findPath() Error: {e}")
+        return False, False
 
 # Loop to continuously walk the path found by findPath().
 # Simulates continuous movement towards the path until the task is completed.
@@ -399,7 +393,6 @@ def pathLoop(treeType, TreeX, TreeY):
     try:
         while True:
             Info = allInfo(TreeX, TreeY)
-            Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
 
             try:
                 PathPoint, PathAngle = findPath(Info)
@@ -408,20 +401,10 @@ def pathLoop(treeType, TreeX, TreeY):
                 startTime = time.time()
                 time.sleep(random.uniform(.4, .6))
                 rotateCamera(PathAngle)
-                if (autoit.pixel_get_color(1726,160) == 15522407):
-                    if (treeType == "Regular"):
-                        time.sleep(3 - (time.time() - startTime))
-                    elif (treeType == "Willow"):
-                        time.sleep(3 - (time.time() - startTime))
-                    else:
-                        time.sleep(3 - (time.time() - startTime))
+                if (autoit.pixel_get_color(1726,160) == 15522407): # If Running
+                    time.sleep(3 - (time.time() - startTime))
                 else:
-                    if (treeType == "Regular"):
-                        time.sleep(7 - (time.time() - startTime))
-                    elif (treeType == "Willow"):
-                        time.sleep(7 - (time.time() - startTime))
-                    else:
-                        time.sleep(7 - (time.time() - startTime))
+                    time.sleep(7 - (time.time() - startTime))
             except:
                 print("Path Complete")
                 break
@@ -436,7 +419,7 @@ def pathLoop(treeType, TreeX, TreeY):
 def cutWood(treeType, Info):
     try:
         while True:
-            Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
+            _, _, _, _, _, angleOfApproach = unpackInfo(Info)
 
             try:
                 if (treeType == "Regular"):
@@ -479,7 +462,7 @@ def cutWood(treeType, Info):
             while True:
                 # Walking to Wood
                 # print("Walking To Wood")
-                A, A1 = locateOnScreenRandom("WoodcuttingBooleanFalse.png", confidence=0.7)
+                A, A1 = locateOnScreenRandom("WoodcuttingBooleanFalse.png", confidence=0.65)
                 if A:
                     if ((time.time() - startTime) > 5):
                         break
@@ -490,7 +473,7 @@ def cutWood(treeType, Info):
             while True:
                 # Cutting Wood
                 # print("Cutting Wood")
-                B, B1 = locateOnScreenRandom("WoodcuttingBooleanTrue.png", confidence=0.7)
+                B, B1 = locateOnScreenRandom("WoodcuttingBooleanTrue.png", confidence=0.65)
                 if B:
                     time.sleep(.01)
                 else:
@@ -499,12 +482,12 @@ def cutWood(treeType, Info):
     except:
         print("cutWood() Error")
 
-# Banks the cut wood by interacting with the banker
+# Banks the wood by interacting with the banker
 def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
     try:
         while True:
             Info = allInfo(BankX, BankY)
-            Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
+            Distance, _, _, _, _, angleOfApproach = unpackInfo(Info)
 
             if Distance < distanceLimit:
                 try:
@@ -523,7 +506,7 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
                     average_x = sum(loc[0] for loc in sortedTellers) / len(sortedTellers)
                     middleTeller = min(sortedTellers, key=lambda loc: abs(loc[0] - average_x))
                 except:
-                    rotateCamera(angleOfApproach)
+                    rotateCamera(angleOfApproach, limit=False)
                     continue
                 
                 smoothMove(middleTeller[0], middleTeller[1])
@@ -603,7 +586,7 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
                     autoit.send("{Esc}", mode=0)
                     break
                 else:
-                    rotateCamera(angleOfApproach)
+                    rotateCamera(angleOfApproach, limit=False)
             elif Distance < 75:
                 print("Short Run")
                 correctPath(treeType, Info)
@@ -616,8 +599,34 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
     except:
         print("bankWood() Error")
 
+# Drops the wood if bankBool is set to False (Powerleveling)
+def dropWood(treeType):
+    if treeType == "Regular":
+        points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + "Logs.png", confidence=0.4, region=(1663, 379, 257, 300)))
+    elif treeType == "Willow":
+        points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + "WillowLogs.png", confidence=0.4, region=(1663, 379, 257, 300)))
+    
+    filtered_points = []
+
+    # Filtering points to avoid overlaps
+    for point in points:
+        x, y, w, h = point[0], point[1], point[2], point[3]
+        
+        # Check if any points in filtered_points are too close (X coordinate + width + 15)
+        if not any(px + pw + 15 > x and abs(py - y) <= 15 for (px, py, pw, ph) in filtered_points):
+            filtered_points.append((x, y, w, h))
+
+    for point in filtered_points:
+        x, y, w, h = point
+        x, y = int(x), int(y)
+        RandomX = random.randrange(x, x + w)
+        RandomY = random.randrange(y, y + h)
+        smoothMove(RandomX, RandomY)
+        autoit.mouse_click("left")
+        time.sleep(random.uniform(.1, .3))  
+
 # Bank, Cut, or Run?
-def woodCutter(treeType):
+def woodCutter(treeType, bankBool = True):
     if treeType == "Regular":
         cutting = True
         TreeX, TreeY = 3164, 3403
@@ -642,24 +651,30 @@ def woodCutter(treeType):
         try:
             Info = allInfo(TreeX, TreeY)
             Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
-
-            if (autoit.pixel_get_color(1826, 612) == colorLogs):
-                print("Inventory is full")
-                bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=distanceLimit)
+            PathPoint, _ = findPath(Info)
+            if (PathPoint): # Previous Path On Map Exists
+                pathLoop(treeType, TreeX, TreeY) 
             else:
-                if (Distance < 75) and (Distance > 10):
-                    print("Short Run")
-                    correctPath(treeType, Info)
-                elif (Distance < 100000) and (Distance > 75):
-                    print("Long Run")
-                    setWorldMapPath(treeType)
-                    pathLoop(treeType, TreeX, TreeY)
-                else:
-                    if cutting:
-                        print("Cut Wood")
-                        cutWood(treeType, Info)
+                if (autoit.pixel_get_color(1826, 612) == colorLogs):
+                    print("Inventory is full")
+                    if (bankBool):
+                        bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=distanceLimit)
                     else:
-                        break
+                        dropWood(treeType)
+                else:
+                    if (Distance < 75) and (Distance > 10):
+                        print("Short Run")
+                        correctPath(treeType, Info)
+                    elif (Distance < 100000) and (Distance > 75):
+                        print("Long Run")
+                        setWorldMapPath(treeType)
+                        pathLoop(treeType, TreeX, TreeY)
+                    else:
+                        if cutting:
+                            print("Cut Wood")
+                            cutWood(treeType, Info)
+                        else:
+                            break
             time.sleep(1)
         except Exception as e:
             pass
@@ -668,6 +683,14 @@ autoit.win_activate("RuneLite") # Bring Runescape Client to the Foreground
 autoit.win_move("RuneLite", 856, 0, 1072, 686)  # Resize
 os.chdir(os.path.dirname(os.path.abspath(__file__))) # Change Directory to the Folder this script is in
 
+# Cut Regular Logs South of the GE
 # woodCutter("Regular")
+
+# Cut Willows in Draynor
 woodCutter("Willow")
+
+# Cut Willows in Draynor and Drop the Logs
+# woodCutter("Willow", bankBool = False)
+
+# Walk to the GE ("cutting" is False so it will end the script at the GE)
 # woodCutter("GrandExchange")
