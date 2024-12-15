@@ -164,7 +164,7 @@ def findLocation(drawLoc = False):
         x, y, w, h = pyautogui.locateOnScreen(".\\Image Files\\LocationBox.png", confidence=.6, region=(X1, Y1, X2-X1, Y2-Y1))
         x, y = int(x), int(y)
         if x:
-            LocationText = pyautogui.screenshot(region=(x + 28, y, 98, 20))
+            LocationText = pyautogui.screenshot(region=(x + 31, y, 98, 20))
             if drawLoc == True:
                 LocationText.show()
             pytesseract.pytesseract.tesseract_cmd = r".\Tesseract-OCR\tesseract.exe"
@@ -220,7 +220,6 @@ def allInfo(X2, Y2):
         
         print("Location: " + str(X) + ", " + str(Y))
         print("Distance: " + str(Distance))
-        print("CompassX: " + str(CompassX) + " " + "CompassY: " + str(CompassY))
         print("Angle of Player: " + str(round(CompassAngle, 1)))
         print("Angle of Destination: " + str(round(DirectionAngle, 1)))
         print("Angle of Approach: " + str(round(angleOfApproach, 1)))
@@ -371,7 +370,7 @@ def findPath(Info):
 
         max_distance = 2000000
         min_distance = 10
-        closest_pixel = None
+        PathPoint = None
         
         for x, y in zip(XArray, YArray):
             distance_to_edge = min(x, y, width - x - 1, height - y - 1)
@@ -532,16 +531,12 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
 
                 if BankBool:
                     print("Bank")
-                    autoit.mouse_click("right")
-                    time.sleep(random.uniform(.4, .6))
-                    RandomX, RandomY = locateOnScreenRandom("BankBanker.png")
-                    smoothMove(RandomX, RandomY)
                     autoit.mouse_click("left")
-                    time.sleep(random.uniform(4,5))
+                    time.sleep(random.uniform(.3,.5))
 
                     breakout = 0
+                    bankOpenTimer = time.time()
                     while True:
-                        bankOpenTimer = time.time()
                         A, B = locateOnScreenRandom("BankOpened.png")
                         if (A):
                             break
