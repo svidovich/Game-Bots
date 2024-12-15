@@ -180,10 +180,7 @@ def findLocation(drawLoc = False):
 # Returns CompassX, CompassY, CompassWidth, CompassAngle.
 def readCompass():
     try:
-        X1, Y1, X2, Y2 = autoit.win_get_pos("RuneLite")
         CompassX, CompassY, CompassWidth, CompassHeight = 1702, 28, 44, 44
-        CompassX, CompassY = int(CompassX), int(CompassY)
-        CompassWidth, CompassHeight = int(CompassWidth), int(CompassHeight)
         Compass = pyautogui.screenshot(region=(CompassX, CompassY, CompassWidth, CompassHeight))
         XArray, YArray = [], []
         for x in range(CompassWidth):
@@ -283,7 +280,7 @@ def setWorldMapPath(location):
         autoit.mouse_click("left")
         time.sleep(random.uniform(.2, .4))
         if location == "Regular":
-            X1, Y1 = 1575, 404
+            X1, Y1 = 1577, 407
         elif location == "Willow":
             X1, Y1 = 1574, 413
         elif location == "GrandExchange":
@@ -296,7 +293,7 @@ def setWorldMapPath(location):
         time.sleep(random.uniform(.2, .4))
         autoit.mouse_up("left")
         time.sleep(random.uniform(.5, .75))
-        x, y = locateOnScreenRandom(location + ".png")
+        x, y = locateOnScreenRandom(location + ".png", confidence=.6)
         smoothMove(x, y)
         autoit.mouse_click("right")
         time.sleep(random.uniform(.5, .75))
@@ -672,10 +669,10 @@ autoit.win_move("RuneLite", 856, 0, 1072, 686)  # Resize
 os.chdir(os.path.dirname(os.path.abspath(__file__))) # Change Directory to the Folder this script is in
 
 # Cut Regular Logs South of the GE
-# woodCutter("Regular")
+woodCutter("Regular", bankBool = False)
 
 # Cut Willows in Draynor
-woodCutter("Willow")
+# woodCutter("Willow")
 
 # Cut Willows in Draynor and Drop the Logs
 # woodCutter("Willow", bankBool = False)

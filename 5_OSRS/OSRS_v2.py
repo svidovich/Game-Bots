@@ -391,7 +391,6 @@ def pathLoop(treeType, TreeX, TreeY):
             Info = allInfo(TreeX, TreeY)
 
             try:
-                # findPath 2x to avoid update errors
                 PathPoint, PathAngle = findPath(Info)
                 smoothMove(PathPoint[0], PathPoint[1])
                 autoit.mouse_click()
@@ -498,7 +497,6 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
                         tellerLocs = highlightColorOnScreen(colorTeller, 1, region=(x1, y1, x2, y2), sections = 10, drawLoc=False)
                     elif treeType == "Yew":
                         tellerLocs = highlightColorOnScreen(colorTeller, 1, region=(x1, y1, x2, y2), sections = 10, drawLoc=False)
-
 
                     filteredTellers = [loc for loc in tellerLocs if x1 <= loc[0] <= x2 and y1 <= loc[1] <= y2]
                     sortedTellers = sorted(filteredTellers, key=lambda loc: loc[0])
