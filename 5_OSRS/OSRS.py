@@ -433,19 +433,19 @@ def cutWood(treeType, Info):
                 rotateCamera(angleOfApproach, limit=False)
 
             smoothMove(middleTree[0], middleTree[1])
-            A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png")
+            A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png", confidence=.9)
 
             if (A):
                 autoit.mouse_click()
             else:
                 smoothMove(leftTree[0], leftTree[1])
-                A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png")
+                A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png", confidence=.9)
 
                 if (A):
                     autoit.mouse_click()
                 else:
                     smoothMove(rightTree[0], rightTree[1])
-                    A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png")
+                    A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png", confidence=.9)
 
                     if (A):
                         autoit.mouse_click()
@@ -546,7 +546,7 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
                         autoit.send("{Esc}", mode=0)
                         break
 
-                    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.4, region=(1663,379,257,300)))
+                    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.6, region=(1663,379,257,300)))
                     point = random.choice(points)
                     x, y, w, h = point[0], point[1], point[2], point[3]
                     x, y = int(x), int(y)
@@ -589,7 +589,7 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
 
 # Drops the wood if bankBool is set to False (Powerleveling)
 def dropWood(treeType):
-    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.4, region=(1663, 379, 257, 300)))
+    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.6, region=(1663, 379, 257, 300)))
 
     filtered_points = []
 
@@ -669,7 +669,7 @@ autoit.win_move("RuneLite", 856, 0, 1072, 686)  # Resize
 os.chdir(os.path.dirname(os.path.abspath(__file__))) # Change Directory to the Folder this script is in
 
 # Cut Regular Logs South of the GE
-woodCutter("Regular", bankBool = False)
+# woodCutter("Regular")
 
 # Cut Willows in Draynor
 # woodCutter("Willow")

@@ -436,19 +436,19 @@ def cutWood(treeType, Info):
                 rotateCamera(angleOfApproach, limit=False)
 
             smoothMove(middleTree[0], middleTree[1])
-            A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png")
+            A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png", confidence=.9)
 
             if (A):
                 autoit.mouse_click()
             else:
                 smoothMove(leftTree[0], leftTree[1])
-                A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png")
+                A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png", confidence=.9)
 
                 if (A):
                     autoit.mouse_click()
                 else:
                     smoothMove(rightTree[0], rightTree[1])
-                    A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png")
+                    A, A1 = locateOnScreenRandom("TealIndicator" + treeType + ".png", confidence=.9)
 
                     if (A):
                         autoit.mouse_click()
