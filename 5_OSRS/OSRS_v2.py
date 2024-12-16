@@ -8,7 +8,7 @@ import random             # To introduce randomness into movements.
 import time               # For controlling the timing of actions.
 import mouse              # To get current mouse position.
 import numpy as np        # For handling array operations.
-from PIL import Image, ImageGrab, ImageDraw  # For image processing and drawing.
+from PIL import ImageDraw  # For image processing and drawing.
 
 
 # ======Utility Functions======
@@ -635,10 +635,10 @@ def woodCutter(treeType, bankBool = True):
         distanceLimit = 3
     elif treeType == "Yew":
         cutting = True
-        TreeX, TreeY = 3207, 3502
+        TreeX, TreeY = 3208, 3502
         BankX, BankY = 3167, 3489
         colorLogs = 4928516
-        colorTeller = 6445657
+        colorTeller = 15197159
         distanceLimit = 3
     elif treeType == "GrandExchange":
         cutting = False

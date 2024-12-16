@@ -8,7 +8,7 @@ import random             # To introduce randomness into movements.
 import time               # For controlling the timing of actions.
 import mouse              # To get current mouse position.
 import numpy as np        # For handling array operations.
-from PIL import Image, ImageGrab, ImageDraw  # For image processing and drawing.
+from PIL import ImageDraw  # For image processing and drawing.
 
 
 # ======Utility Functions======
@@ -37,13 +37,13 @@ def smoothMove(x2, y2):
         for i in range(num_points + 1):
             ratio = i / num_points
             x = int(x1 + (x2 - x1) * ratio)
-            if trig == 1:
+            if trig == 1: # Sin Function w/ Sin Noise
                 y_variation = int(amplitude * math.sin(ratio * math.pi) + .2 * math.sin(30 * ratio))
-            elif trig == 2:
+            elif trig == 2: # Sin Function w/ Cos Noise
                 y_variation = int(amplitude * math.sin(ratio * math.pi) + .2 * math.cos(30 * ratio + (math.pi / 2)))
-            elif trig == 3:
+            elif trig == 3: # Cos Function w/ Sin Noise
                 y_variation = int(amplitude * math.sin(ratio * math.pi + math.pi) + .2 * math.sin(30 * ratio))
-            elif trig == 4:
+            elif trig == 4: # Cos Function w/ Cos Noise
                 y_variation = int(amplitude * math.sin(ratio * math.pi + math.pi) + .2 * math.cos(30 * ratio + (math.pi / 2)))
             elif trig == 5: # Very Short Movements don't Arc Up/Down
                 y_variation = 0 
@@ -562,7 +562,6 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
                         for point in points:
                             x, y, w, h = point[0], point[1], point[2], point[3]
                             draw.rectangle([x, y, x + 1, y + 1], outline="red", width=1)
-                        
                         # Show the modified screenshot with rectangles drawn
                         screenshot.show()
                         time.sleep(100)
@@ -665,17 +664,17 @@ def woodCutter(treeType, bankBool = True):
             pass
 
 autoit.win_activate("RuneLite") # Bring Runescape Client to the Foreground
-autoit.win_move("RuneLite", 856, 0, 1072, 686)  # Resize
+autoit.win_move("RuneLite", 856, 0, 1072, 686)  # Resize/Move
 os.chdir(os.path.dirname(os.path.abspath(__file__))) # Change Directory to the Folder this script is in
 
 # Cut Regular Logs South of the GE
 # woodCutter("Regular")
 
 # Cut Willows in Draynor
-# woodCutter("Willow")
+woodCutter("Willow")
 
 # Cut Willows in Draynor and Drop the Logs
-woodCutter("Willow", bankBool = False)
+# woodCutter("Willow", bankBool = False)
 
 # Walk to the GE ("cutting" is False so it will end the script at the GE)
 # woodCutter("GrandExchange")
