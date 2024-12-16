@@ -414,7 +414,7 @@ def pathLoop(treeType, TreeX, TreeY):
 
 # Handles the woodcutting task for the player.
 # Finds trees, moves to them, and cuts the trees
-def cutWood(treeType, Info):
+def cutWood(treeType, colorLogs, Info):
     try:
         while True:
             _, _, _, _, _, angleOfApproach = unpackInfo(Info)
@@ -476,6 +476,8 @@ def cutWood(treeType, Info):
                 B, B1 = locateOnScreenRandom("WoodcuttingBooleanTrue.png", confidence=0.65)
                 if B:
                     time.sleep(.01)
+                    if (autoit.pixel_get_color(1826, 612) == colorLogs):
+                        break
                 else:
                     break
             break
@@ -636,7 +638,7 @@ def woodCutter(treeType, bankBool = True):
     elif treeType == "Yew":
         cutting = True
         TreeX, TreeY = 3208, 3502
-        BankX, BankY = 3167, 3489
+        BankX, BankY = 3166, 3489
         colorLogs = 4928516
         colorTeller = 15197159
         distanceLimit = 3
@@ -671,7 +673,7 @@ def woodCutter(treeType, bankBool = True):
                     else:
                         if cutting:
                             print("Cut Wood")
-                            cutWood(treeType, Info)
+                            cutWood(treeType, colorLogs, Info)
                         else:
                             break
             time.sleep(1)
