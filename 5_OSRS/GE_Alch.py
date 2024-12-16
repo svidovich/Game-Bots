@@ -67,11 +67,11 @@ if response.status_code == 200:
     # Print the DataFrame
     # print(sorted_non_members_df)
 
-    for i in range(10):
+    for i in range(20):
         TopItem = sorted_non_members_df.iloc[i]["Item"]
         print("Top Item " + str(i) + " is: " + TopItem)
 
     # Optionally, save the DataFrame to a CSV file
-    sorted_non_members_df.to_csv('alchemy_data.csv', index=False)
+    # sorted_non_members_df.to_csv('alchemy_data.csv', index=False)
 else:
     print(f"Failed to retrieve the page, status code: {response.status_code}")
