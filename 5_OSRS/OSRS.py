@@ -309,11 +309,10 @@ def setWorldMapPath(location):
 # Adjusts direction based on the target type (tree).
 def correctPath(treeType, Info):
     try:
-        Distance, CompassX, CompassY, CompassWidth, _, angleOfApproach = unpackInfo(Info)
+        Distance, _, _, _, _, angleOfApproach = unpackInfo(Info)
 
-        MinimapX, MinimapY = int(CompassX + (CompassWidth / 2) + 1), int(CompassY + 7)
-        Minimap = pyautogui.screenshot(region=(MinimapX, MinimapY, 154, 154))
-        CenterX, CenterY = MinimapX + 77, MinimapY + 77
+        MinimapX, MinimapY, MinimapWidth, MinimapHeight = 1725, 35, 154, 154
+        CenterX, CenterY = MinimapX + (MinimapWidth/2), MinimapY + (MinimapHeight/2)
         if Distance > 15:
             mapDistance = random.randint(66, 70)
         elif Distance > 10:
@@ -343,7 +342,7 @@ def correctPath(treeType, Info):
 # Evaluates the color on the minimap for pathfinding.
 def findPath(Info):
     try:
-        _ , CompassX, CompassY, CompassWidth, _, angleOfApproach = unpackInfo(Info)
+        _ , CompassX, CompassY, CompassWidth, _, _ = unpackInfo(Info)
         MinimapX, MinimapY = int(CompassX + (CompassWidth / 2) + 1), int(CompassY + 7)
         Minimap = pyautogui.screenshot(region=(MinimapX, MinimapY, 154, 154))
         width, height = Minimap.width, Minimap.height
@@ -677,4 +676,4 @@ woodCutter("Willow")
 # woodCutter("Regular")
 
 # Walk to the GE ("cutting" is False so it will end the script at the GE)
-# woodCutter("GrandExchange")
+#woodCutter("GrandExchange")
