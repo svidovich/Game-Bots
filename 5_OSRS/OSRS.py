@@ -667,14 +667,14 @@ autoit.win_activate("RuneLite") # Bring Runescape Client to the Foreground
 autoit.win_move("RuneLite", 856, 0, 1072, 686)  # Resize/Move
 os.chdir(os.path.dirname(os.path.abspath(__file__))) # Change Directory to the Folder this script is in
 
-# Cut Regular Logs South of the GE
-# woodCutter("Regular")
-
 # Cut Willows in Draynor
 woodCutter("Willow")
 
 # Cut Willows in Draynor and Drop the Logs
 # woodCutter("Willow", bankBool = False)
+
+# Cut Regular Logs South of the GE
+# woodCutter("Regular")
 
 # Walk to the GE ("cutting" is False so it will end the script at the GE)
 # woodCutter("GrandExchange")
