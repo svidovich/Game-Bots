@@ -384,7 +384,7 @@ def findPath(Info):
 
 # Loop to continuously walk the path found by findPath().
 # Simulates continuous movement towards the path until the task is completed.
-def pathLoop(treeType, TreeX, TreeY):
+def pathLoop(TreeX, TreeY):
     try:
         while True:
             Info = allInfo(TreeX, TreeY)
@@ -582,7 +582,7 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
                     setWorldMapPath("SouthBank")
                 elif treeType == "Willow":
                     setWorldMapPath("Willow")
-                pathLoop(treeType, BankX, BankY)
+                pathLoop(BankX, BankY)
     except:
         print("bankWood() Error")
 
@@ -637,7 +637,7 @@ def woodCutter(treeType, bankBool = True):
             Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
             PathPoint, _ = findPath(Info)
             if (PathPoint): # Previous Path On Map Exists
-                pathLoop(treeType, TreeX, TreeY) 
+                pathLoop(TreeX, TreeY) 
             else:
                 if (autoit.pixel_get_color(1826, 612) == colorLogs):
                     print("Inventory is full")
@@ -652,7 +652,7 @@ def woodCutter(treeType, bankBool = True):
                     elif (Distance < 100000) and (Distance > 75):
                         print("Long Run")
                         setWorldMapPath(treeType)
-                        pathLoop(treeType, TreeX, TreeY)
+                        pathLoop(TreeX, TreeY)
                     else:
                         if cutting:
                             print("Cut Wood")
