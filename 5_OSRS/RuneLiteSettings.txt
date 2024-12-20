@@ -8,13 +8,6 @@
 
 # GroundItems
 # Show highlighted items only ☒
-# Highlighted Items Color (#FFE7FF00)
-# For Loot Bots: Highlited Items (Item you want)
-    Eg. Bones
-# For Loot Bots: Hidden Items (Items you don't want to pick up) 
-    Eg. Cowhide, Raw Meat
-# Depriortize menu hidden items ☒
-# Price Display (Off)
 
 # Logout Timer
 # Idle Timer (25 mins)
@@ -36,6 +29,7 @@
 
 # Woodcutting
 # Reset Stats (9999 mins)
+
 # World Map (Disable)
 # ======(3rd-party)==========
 
