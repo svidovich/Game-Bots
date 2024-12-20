@@ -587,7 +587,7 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
 
 # Drops the wood if bankBool is set to False (Powerleveling)
 def dropWood(treeType):
-    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.6, region=(1663, 379, 257, 300)))
+    points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.4, region=(1663, 379, 257, 300)))
 
     filtered_points = []
 
