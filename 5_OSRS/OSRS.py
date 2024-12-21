@@ -10,7 +10,6 @@ import mouse              # To get current mouse position.
 import numpy as np        # For handling array operations.
 from PIL import ImageDraw  # For image processing and drawing.
 
-
 # ======Utility Functions======
 
 # Smoothly moves the mouse from the current position to a target position (x2, y2).
