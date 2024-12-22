@@ -163,7 +163,7 @@ def findLocation(drawLoc = False):
         x, y, w, h = pyautogui.locateOnScreen(".\\Image Files\\LocationBox.png", confidence=.6)
         x, y = int(x), int(y)
         if x:
-            LocationText = pyautogui.screenshot(region=(x + 31, y, 98, 21))
+            LocationText = pyautogui.screenshot(region=(x + 31, y, 98, 22))
             if drawLoc == True:
                 LocationText.show()
             pytesseract.pytesseract.tesseract_cmd = r".\Tesseract-OCR\tesseract.exe"
