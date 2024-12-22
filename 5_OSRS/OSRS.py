@@ -160,7 +160,7 @@ def highlightColorOnScreen(color, tolerance, region, sections=30, drawLoc=False)
 def findLocation(drawLoc = False):
     try:
         X1, Y1, X2, Y2 = autoit.win_get_pos("RuneLite")
-        x, y, w, h = pyautogui.locateOnScreen(".\\Image Files\\LocationBox.png", confidence=.6, region=(X1, Y1, X2-X1, Y2-Y1))
+        x, y, w, h = pyautogui.locateOnScreen(".\\Image Files\\LocationBox.png", confidence=.6)
         x, y = int(x), int(y)
         if x:
             LocationText = pyautogui.screenshot(region=(x + 31, y, 98, 20))
@@ -666,13 +666,13 @@ autoit.win_move("RuneLite", 856, 0, 1072, 686)  # Resize/Move
 os.chdir(os.path.dirname(os.path.abspath(__file__))) # Change Directory to the Folder this script is in
 
 # Cut Willows in Draynor
-woodCutter("Willow")
+# woodCutter("Willow")
 
 # Cut Willows in Draynor and Drop the Logs
 # woodCutter("Willow", bankBool = False)
 
 # Cut Regular Logs South of the GE
-# woodCutter("Regular")
+woodCutter("Regular")
 
 # Walk to the GE ("cutting" is False so it will end the script at the GE)
 #woodCutter("GrandExchange")
