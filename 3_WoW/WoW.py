@@ -31,10 +31,6 @@ LastBait = time.time() - 600 # Set a timer that is ready to bait the hook
 # Loop until broken
 while True:
     try:
-        # Screenshot only/right monitor
-        Screen = pyautogui.screenshot(region=(0, 0, 1920, 1080))
-        Screen.save("Screen.png")
-
         # Check for bait expiration
         if (time.time() - LastBait > 600):
             print("Bait Expired")
