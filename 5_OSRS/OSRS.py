@@ -339,12 +339,10 @@ def correctPath(treeType, Info):
 
 # Finds the pathway towards a location using the minimap.
 # Evaluates the color on the minimap for pathfinding.
-def findPath(Info):
+def findPath():
     try:
-        _ , CompassX, CompassY, CompassWidth, _, _ = unpackInfo(Info)
-        MinimapX, MinimapY = int(CompassX + (CompassWidth / 2) + 1), int(CompassY + 7)
+        MinimapX, MinimapY, MinimapWidth, MinimapHeight = 1725, 35, 154, 154
         Minimap = pyautogui.screenshot(region=(MinimapX, MinimapY, 154, 154))
-        width, height = Minimap.width, Minimap.height
         compass_array = np.array(Minimap)
         target_color = (201, 132, 255) # Pink Path
         XArray = []
@@ -353,13 +351,13 @@ def findPath(Info):
         # Define a safe zone distance from the edge to avoid clicks too close to the edge
         buffer_zone = 23  # Adjust this distance as needed
 
-        for x in range(width):
-            for y in range(height):
+        for x in range(MinimapWidth):
+            for y in range(MinimapHeight):
                 current_color = tuple(compass_array[y, x])
                 if current_color == target_color:
                     # Only accept colors that are inside the buffer zone
-                    if x >= buffer_zone and x <= width - buffer_zone - 1 and \
-                       y >= buffer_zone and y <= height - buffer_zone - 1:
+                    if x >= buffer_zone and x <= MinimapWidth - buffer_zone - 1 and \
+                       y >= buffer_zone and y <= MinimapHeight - buffer_zone - 1:
                         XArray.append(x)
                         YArray.append(y)
 
@@ -368,7 +366,7 @@ def findPath(Info):
         PathPoint = None
         
         for x, y in zip(XArray, YArray):
-            distance_to_edge = min(x, y, width - x - 1, height - y - 1)
+            distance_to_edge = min(x, y, MinimapWidth - x - 1, MinimapHeight - y - 1)
             if distance_to_edge < max_distance and distance_to_edge > min_distance:
                 max_distance = distance_to_edge
                 PathPoint = (x + MinimapX, y + MinimapY)
@@ -388,7 +386,7 @@ def pathLoop(TreeX, TreeY):
             Info = allInfo(TreeX, TreeY)
 
             try:
-                PathPoint, PathAngle = findPath(Info)
+                PathPoint, PathAngle = findPath()
                 smoothMove(PathPoint[0], PathPoint[1])
                 autoit.mouse_click()
                 startTime = time.time()
@@ -633,7 +631,7 @@ def woodCutter(treeType, bankBool = True):
         try:
             Info = allInfo(TreeX, TreeY)
             Distance, CompassX, CompassY, CompassWidth, CompassAngle, angleOfApproach = unpackInfo(Info)
-            PathPoint, _ = findPath(Info)
+            PathPoint, _ = findPath()
             if (PathPoint): # Previous Path On Map Exists
                 pathLoop(TreeX, TreeY) 
             else:
