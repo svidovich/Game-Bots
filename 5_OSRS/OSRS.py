@@ -457,7 +457,6 @@ def cutWood(treeType, Info):
                 if A:
                     if ((time.time() - startTime) > 5):
                         break
-                    time.sleep(.01)
                 else: 
                     break
             
@@ -466,7 +465,7 @@ def cutWood(treeType, Info):
                 # print("Cutting Wood")
                 B, B1 = locateOnScreenRandom("WoodcuttingBooleanTrue.png", confidence=0.65)
                 if B:
-                    time.sleep(.01)
+                    pass
                 else:
                     break
             break
