@@ -238,7 +238,7 @@ def unpackInfo(Info):
 # ======Pathfinding and Movement Functions==========
 
 # Rotate the in-game camera by a certain angle.
-# Optionally limits rotation to avoid sharp turns.
+# Optionally limits rotation to avoid small rotations
 def rotateCamera(angle, limit=True):
     try:
         x = random.randint(1278, 1531)
