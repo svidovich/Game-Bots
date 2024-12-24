@@ -73,7 +73,7 @@ def calculateAngle(center, point):
     except Exception as e:
         print("calculateAngle() error")
 
-# Locate an image on the screen randomly.
+# Locate an image on the screen.
 # Returns randomized X, Y coordinates within the found area.
 def locateOnScreenRandom(fileName, confidence=0.8, Region=None):
     try:
