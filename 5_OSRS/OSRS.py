@@ -156,7 +156,7 @@ def highlightColorOnScreen(color, tolerance, region, sections=30, drawLoc=False)
 # ======Information Retrieval Functions======
 
 # Finds the location (X, Y, Height) of the player's character on the screen.
-# Optionally draws the location.
+# Optionally draws the location box.
 def findLocation(drawLoc = False):
     try:
         X1, Y1, X2, Y2 = autoit.win_get_pos("RuneLite")
@@ -305,7 +305,7 @@ def setWorldMapPath(location):
         print("setWorldMapPath() Error")
 
 # Clicks towards a target using the minimap.
-# Adjusts direction based on the target type (tree).
+# Adjusts sleep duration based on the treeType
 def correctPath(treeType, Info):
     try:
         Distance, _, _, _, _, angleOfApproach = unpackInfo(Info)
@@ -582,7 +582,7 @@ def bankWood(treeType, BankX, BankY, colorTeller, distanceLimit=5):
     except:
         print("bankWood() Error")
 
-# Drops the wood if bankBool is set to False (Powerleveling)
+# Drops the wood if bankBool is set to False (Power Leveling)
 def dropWood(treeType):
     points = list(pyautogui.locateAllOnScreen(".\\Image Files\\" + str(treeType) + "Logs.png", confidence=0.4, region=(1663, 379, 257, 300)))
 
