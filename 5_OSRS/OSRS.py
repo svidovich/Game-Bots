@@ -642,7 +642,7 @@ def woodCutter(treeType, bankBool = True):
                     else:
                         dropWood(treeType)
                 else:
-                    if (Distance < 75) and (Distance > 10):
+                    if (Distance < 75) and (Distance > distanceLimit):
                         print("Short Run")
                         correctPath(treeType, Info)
                     elif (Distance < 100000) and (Distance > 75):
