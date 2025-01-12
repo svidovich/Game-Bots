@@ -1,5 +1,7 @@
 <p align="center">
-        <img src="https://github.com/user-attachments/assets/d1b485df-68c5-49bc-9ad8-bbcad93de53e" width="800" height="400">
+        <a href="https://a.co/d/3tIVW10" title="The Ultimate Game Bot Guide">
+                <img src="https://github.com/user-attachments/assets/d1b485df-68c5-49bc-9ad8-bbcad93de53e" width="800" height="400">
+        </a>
 </p>
 
 <p align="center">
