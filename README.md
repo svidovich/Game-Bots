@@ -12,7 +12,7 @@
 
 <p align="center">
     <a href="https://www.ebay.com/itm/306036101843" title="The Ultimate Game Bot Guide">
-        <img src="https://github.com/user-attachments/assets/8b2b97da-2729-4c41-8c0b-db9a2d36c074" alt="The Ultimate Game Bot Guide" width="800" height="400"/>
+        <img src="https://github.com/user-attachments/assets/bdcc90ae-8cac-4181-9e93-702d4ea5f708" alt="The Ultimate Game Bot Guide" width="800" height="400"/>
     </a>
 </p>
 
